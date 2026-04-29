@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Digital Bookstore - Single File</title>
+
+<style>
+body { font-family: Arial; background:#f4f4f4; padding:20px; }
+h1 { color:#333; }
+
+.container { max-width:800px; margin:auto; }
+
+input, button {
+    padding:10px;
+    margin:5px;
+}
+
+.book {
+    background:white;
+    padding:10px;
+    margin:10px 0;
+    border-radius:5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📚 Digital Bookstore</h1>
+
+<h2>Register</h2>
+<input id="regUser" placeholder="Username">
+<input id="regPass" type="password" placeholder="Password">
+<button onclick="register()">Register</button>
+
+<h2>Login</h2>
+<input id="logUser" placeholder="Username">
+<input id="logPass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<hr>
+
+<h2>Books</h2>
+<button onclick="loadBooks()">Load Books</button>
+<div id="books"></div>
+
+</div>
+
+<script>
+
+/* =========================
+   🗄️ FAKE DATABASE
+========================= */
+
+let users = [];
+let books = [
+    { id:1, title:"1984", author:"George Orwell" },
+    { id:2, title:"The Hobbit", author:"J.R.R. Tolkien" },
+    { id:3, title:"Atomic Habits", author:"James Clear" }
+];
+
+let currentUser = null;
+
+/* =========================
+   🔐 BACKEND LOGIC
+========================= */
+
+// Register
+function register() {
+    let username = regUser.value.trim();
+    let password = regPass.value.trim();
+
+    if (!username || !password) {
+        alert("Enter details");
+        return;
+    }
+
+    if (users.find(u => u.username === username)) {
+        alert("User exists");
+        return;
+    }
+
+    users.push({
+        username,
+        password,
+        favorites: []
+    });
+
+    alert("Registered!");
+}
+
+// Login
+function login() {
+    let username = logUser.value.trim();
+    let password = logPass.value.trim();
+
+    let user = users.find(u => u.username === username && u.password === password);
+
+    if (!user) {
+        alert("Invalid login");
+        return;
+    }
+
+    currentUser = user;
+    alert("Login success");
+}
+
+// Load books
+function loadBooks() {
+    let div = document.getElementById("books");
+    div.innerHTML = "";
+
+    books.forEach(b => {
+        div.innerHTML += `
+            <div class="book">
+                <b>${b.title}</b><br>
+                ${b.author}<br>
+                <button onclick="addFav(${b.id})">❤️ Favorite</button>
+            </div>
+        `;
+    });
+}
+
+// Add favorite
+function addFav(id) {
+    if (!currentUser) {
+        alert("Login first");
+        return;
+    }
+
+    currentUser.favorites.push(id);
+    alert("Added to favorites");
+}
+
+</script>
+
+</body>
+</html>
