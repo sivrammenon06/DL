@@ -1,0 +1,16 @@
+```
+    <form method="POST">
+        <input type="username" name="username" placeholder="Enter your username" required>
+        <input type="password" name="password" placeholder="Enter your password" required>
+        <button type="submit" class="btn">LOGIN</button>
+    </form>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <div class="footer">
+        Don't have an account? <a href="/register">Sign up</a>
+    </div>
+</div>
+```
