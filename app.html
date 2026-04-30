@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Bookstore - Full Stack Project</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --bg-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --border-color: #bdc3c7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .login-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .login-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 15px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-tab.active {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #d5dbdb;
+        }
+
+        .btn-danger {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .tiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .tile {
+            background: linear-gradient(135deg, var(--secondary-color), #5dade2);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .tile h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .tile p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .books-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .book-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .book-item:hover {
+            background: #d5dbdb;
+            transform: translateX(5px);
+        }
+
+        .book-item.selected {
+            background: #d4edda;
+            border: 2px solid var(--success-color);
+        }
+
+        .book-cover {
+            width: 60px;
+            height: 90px;
+            background: var(--secondary-color);
+            border-radius: 4px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .book-info h4 {
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .book-info p {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .sidebar {
+            position: fixed;
+            right: -500px;
+            top: 0;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            padding: 30px;
+            overflow-y: auto;
+            transition: right 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .sidebar-detail {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-detail label {
+            font-weight: 600;
+            color: var(--text-dark);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-detail p {
+            color: #7f8c8d;
+        }
+
+        .rating-container {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .star {
+            font-size: 2em;
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.2s;
+        }
+
+        .star.active, .star:hover {
+            color: #f39c12;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filters select {
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sort-controls label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 1.5em;
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .recommendation-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-tab {
+            flex: 1;
+            padding: 12px;
+            background: var(--bg-light);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .recommendation-tab.active {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .profile-section {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .profile-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .profile-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-field:last-child {
+            border-bottom: none;
+        }
+
+        .profile-field label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .profile-field span {
+            color: #7f8c8d;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .share-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .share-btn.whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .share-btn.facebook {
+            background: #1877F2;
+            color: white;
+        }
+
+        .share-btn.telegram {
+            background: #0088cc;
+            color: white;
+        }
+
+        .share-btn.instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+        }
+
+        .user-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .tiles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="loginScreen">
+            <div class="header">
+                <h1>📚 Digital Bookstore</h1>
+                <p>Discover your next great read</p>
+            </div>
+            <div class="content">
+                <div class="login-container">
+                    <div class="login-tabs">
+                        <button class="login-tab active" onclick="switchLoginTab('user')">User Login</button>
+                        <button class="login-tab" onclick="switchLoginTab('admin')">Admin Login</button>
+                    </div>
+
+                    <!-- User Login Form -->
+                    <div id="userLoginForm">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="userUsername" placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="userPassword" placeholder="Enter password">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="userLogin()">Login</button>
+                        <button class="btn btn-success" style="width: 100%;" onclick="showSignupForm()">Create New Account</button>
+                        <p style="text-align: center; margin-top: 15px; color: #7f8c8d;">Demo: username "user1", password "pass123"</p>
+                    </div>
+
+                    <!-- Admin Login Form -->
+                    <div id="adminLoginForm" class="hidden">
+                        <div class="form-group">
+                            <label>Admin Username</label>
+                            <input type="text" id="adminUsername" placeholder="Enter admin username">
+                        </div>
+                        <div class="form-group">
+                            <label>Admin Password</label>
+                            <input type="password" id="adminPassword" placeholder="Enter admin password">
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="adminLogin()">Admin Login</button>
+                        <p style="text-align: center; margin-top: 15px; color: #7f8c8d;">Demo: username "admin", password "admin123"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Signup Screen -->
+        <div id="signupScreen" class="hidden">
+            <div class="header">
+                <h1>📚 Create New Account</h1>
+                <p>Join our book community</p>
+            </div>
+            <div class="content">
+                <div class="login-container">
+                    <div class="form-group">
+                        <label>Username *</label>
+                        <input type="text" id="signupUsername" placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" id="signupPassword" placeholder="Choose a password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password *</label>
+                        <input type="password" id="signupConfirmPassword" placeholder="Re-enter password">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-success" style="flex: 1;" onclick="createAccount()">Create Account</button>
+                        <button class="btn btn-secondary" onclick="backToLogin()">Back to Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Preferences Screen -->
+        <div id="preferencesScreen" class="hidden">
+            <div class="navbar">
+                <h2>Welcome! Let's personalize your experience</h2>
+            </div>
+            <div class="content">
+                <div class="login-container" style="max-width: 700px;">
+                    <div class="form-group">
+                        <label>Favorite Genres (Select multiple)</label>
+                        <select id="prefGenres" multiple style="height: 120px;">
+                            <option value="Fiction">Fiction</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Science Fiction">Science Fiction</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Biography">Biography</option>
+                            <option value="History">History</option>
+                            <option value="Self-Help">Self-Help</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Horror">Horror</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Favorite Authors</label>
+                        <textarea id="prefAuthors" rows="3" placeholder="Enter author names separated by commas"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Books You've Read</label>
+                        <textarea id="prefBooksRead" rows="3" placeholder="Enter book titles separated by commas"></textarea>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="savePreferences()">Save & Continue</button>
+                        <button class="btn btn-secondary" onclick="skipPreferences()">Skip</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Dashboard -->
+        <div id="userDashboard" class="hidden">
+            <div class="navbar">
+                <h2>📚 Digital Bookstore</h2>
+                <div class="nav-user">
+                    <span id="navUsername">User</span>
+                    <button class="btn btn-secondary" onclick="showUserProfile()">Profile</button>
+                    <button class="btn btn-danger" onclick="userLogout()">Logout</button>
+                </div>
+            </div>
+            <div class="content">
+                <h2 style="margin-bottom: 20px; color: var(--primary-color);">What would you like to do?</h2>
+                <div class="tiles-grid">
+                    <div class="tile" onclick="showBrowseBooks()">
+                        <h3>📖 Browse Books</h3>
+                        <p>Explore our collection of books</p>
+                    </div>
+                    <div class="tile" onclick="showRecommendations()">
+                        <h3>✨ Recommendations</h3>
+                        <p>Get personalized book suggestions</p>
+                    </div>
+                    <div class="tile" onclick="showFavorites()">
+                        <h3>❤️ Favorite Books</h3>
+                        <p>View and manage your favorites</p>
+                    </div>
+                    <div class="tile" onclick="showUserProfile()">
+                        <h3>👤 My Profile</h3>
+                        <p>View and edit your profile</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browse Books Screen -->
+        <div id="browseBooksScreen" class="hidden">
+            <div class="navbar">
+                <h2>📖 Browse Books</h2>
+                <div class="nav-user">
+                    <button class="btn btn-secondary" onclick="backToUserDashboard()">Back</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="search-bar">
+                    <input type="text" id="bookSearch" placeholder="Search books by title or author..." oninput="filterBooks()">
+                </div>
+                <div class="filters">
+                    <select id="genreFilter" onchange="filterBooks()">
+                        <option value="">All Genres</option>
+                    </select>
+                    <select id="authorFilter" onchange="filterBooks()">
+                        <option value="">All Authors</option>
+                    </select>
+                    <div class="sort-controls">
+                        <label>Sort by:</label>
+                        <select id="sortBy" onchange="sortBooks()">
+                            <option value="default">Default</option>
+                            <option value="alphabetical">A-Z (Title)</option>
+                            <option value="alphabetical-reverse">Z-A (Title)</option>
+                            <option value="year">Year (Newest First)</option>
+                            <option value="year-oldest">Year (Oldest First)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="books-list" id="booksList"></div>
+            </div>
+        </div>
+
+        <!-- Recommendations Screen -->
+        <div id="recommendationsScreen" class="hidden">
+            <div class="navbar">
+                <h2>✨ Book Recommendations</h2>
+                <div class="nav-user">
+                    <button class="btn btn-secondary" onclick="backToUserDashboard()">Back</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="recommendation-tabs">
+                    <button class="recommendation-tab active" onclick="switchRecommendationTab('genre')">By Genre</button>
+                    <button class="recommendation-tab" onclick="switchRecommendationTab('author')">By Author</button>
+                </div>
+                <div id="genreRecommendations">
+                    <h3 style="margin-bottom: 15px; color: var(--primary-color);">Based on your favorite genres</h3>
+                    <div class="books-list" id="genreRecList"></div>
+                </div>
+                <div id="authorRecommendations" class="hidden">
+                    <h3 style="margin-bottom: 15px; color: var(--primary-color);">Based on your favorite authors</h3>
+                    <div class="books-list" id="authorRecList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Favorites Screen -->
+        <div id="favoritesScreen" class="hidden">
+            <div class="navbar">
+                <h2>❤️ My Favorite Books</h2>
+                <div class="nav-user">
+                    <button class="btn btn-secondary" onclick="backToUserDashboard()">Back</button>
+                    <button class="btn btn-success" onclick="showShareOptions()">Share List</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="books-list" id="favoritesList"></div>
+                <p id="noFavoritesMsg" class="hidden" style="text-align: center; color: #7f8c8d; margin-top: 40px; font-size: 1.2em;">No favorite books yet. Start browsing to add some!</p>
+            </div>
+        </div>
+
+        <!-- User Profile Screen -->
+        <div id="userProfileScreen" class="hidden">
+            <div class="navbar">
+                <h2>👤 My Profile</h2>
+                <div class="nav-user">
+                    <button class="btn btn-secondary" onclick="backToUserDashboard()">Back</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="login-container" style="max-width: 700px;">
+                    <div class="profile-section">
+                        <h3>Account Information</h3>
+                        <div class="profile-field">
+                            <label>Username:</label>
+                            <span id="profileUsername"></span>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h3>Preferences</h3>
+                        <div class="profile-field">
+                            <label>Favorite Genres:</label>
+                            <span id="profileGenres"></span>
+                        </div>
+                        <div class="profile-field">
+                            <label>Favorite Authors:</label>
+                            <span id="profileAuthors"></span>
+                        </div>
+                        <div class="profile-field">
+                            <label>Books Read:</label>
+                            <span id="profileBooksRead"></span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="editProfile()">Edit Profile</button>
+                        <button class="btn btn-danger" onclick="confirmDeleteAccount()">Delete Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="hidden">
+            <div class="navbar">
+                <h2>🔧 Admin Dashboard</h2>
+                <div class="nav-user">
+                    <span>Admin</span>
+                    <button class="btn btn-danger" onclick="adminLogout()">Logout</button>
+                </div>
+            </div>
+            <div class="content">
+                <h2 style="margin-bottom: 20px; color: var(--primary-color);">Admin Controls</h2>
+                <div class="tiles-grid">
+                    <div class="tile" onclick="showAddBooks()">
+                        <h3>➕ Add Books</h3>
+                        <p>Add new books to the collection</p>
+                    </div>
+                    <div class="tile" onclick="showDeleteBooks()">
+                        <h3>🗑️ Delete Books</h3>
+                        <p>Remove books from the collection</p>
+                    </div>
+                    <div class="tile" onclick="showEditBooks()">
+                        <h3>✏️ Edit Book Details</h3>
+                        <p>Modify book information</p>
+                    </div>
+                    <div class="tile" onclick="showUserActivity()">
+                        <h3>👥 User Activity</h3>
+                        <p>View registered users</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Add Books Screen -->
+        <div id="adminAddBooksScreen" class="hidden">
+            <div class="navbar">
+                <h2>➕ Add New Book</h2>
+                <div class="nav-user">
+                    <button class="btn btn-secondary" onclick="backToAdminDashboard()">Back</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="login-container" style="max-width: 700px;">
+                    <div class="form-group">
+                        <label>Book Title *</label>
+                        <input type="text" id="newBookTitle" placeholder="Enter book title">
+                    </div>
+                    <div class="form-group">
+                        <label>Author Name *</label>
+                        <input type="text" id="newBookAuthor" placeholder="Enter author name">
+                    </div>
+                    <div class="form-group">
+                        <label>Year Published *</label>
+                        <input type="number" id="newBookYear" placeholder="e.g., 2024">
+                    </div>
+                    <div class="form-group">
+                        <label>Genres (Select multiple)</label>
+                        <select id="newBookGenres" multiple style="height: 120px;">
+                            <option value="Fiction">Fiction</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Science Fiction">Science Fiction</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Biography">Biography</option>
+                            <option value="History">History</option>
+                            <option value="Self-Help">Self-Help</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Horror">Horror</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Or Add New Genre</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="newGenreInput" placeholder="Enter new genre name">
+                            <button class="btn btn-primary" onclick="addNewGenre()">Add Genre</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-success" style="width: 100%;" onclick="addNewBook()">Add Book</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Delete Books Screen -->
+        <div id="adminDeleteBooksScreen" class="hidden">
+            <div class="navbar">
+                <h2>🗑️ Delete Books</h2>
+                <div class="nav-user">
+                    <button class="btn btn-danger" onclick="deleteSelectedBooks()">Delete Selected</button>
+                    <button class="btn btn-secondary" onclick="backToAdminDashboard()">Back</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="search-bar">
+                    <input type="text" id="deleteBookSearch" placeholder="Search books..." oninput="filterDeleteBooks()">
+                </div>
+                <div class="books-list" id="deleteBooksListAdmin"></div>
+            </div>
+        </div>
+
+        <!-- Admin Edit Books Screen -->
+        <div id="adminEditBooksScreen" class="hidden">
+            <div class="navbar">
+                <h2>✏️ Edit Book Details</h2>
+                <div class="nav-user">
+                    <button class="btn btn-secondary" onclick="backToAdminDashboard()">Back</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="search-bar">
+                    <input type="text" id="editBookSearch" placeholder="Search books..." oninput="filterEditBooks()">
+                </div>
+                <div class="books-list" id="editBooksList"></div>
+            </div>
+        </div>
+
+        <!-- Admin User Activity Screen -->
+        <div id="adminUserActivityScreen" class="hidden">
+            <div class="navbar">
+                <h2>👥 User Activity</h2>
+                <div class="nav-user">
+                    <button class="btn btn-secondary" onclick="backToAdminDashboard()">Back</button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="profile-section">
+                    <h3>Total Users: <span id="totalUsersCount">0</span></h3>
+                </div>
+                <h3 style="margin: 20px 0; color: var(--primary-color);">Registered Users</h3>
+                <div class="user-list" id="userActivityList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Details Sidebar -->
+    <div class="sidebar" id="bookSidebar">
+        <button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+        <h2 id="sidebarBookTitle">Book Title</h2>
+        <div class="sidebar-detail">
+            <label>Author</label>
+            <p id="sidebarAuthor"></p>
+        </div>
+        <div class="sidebar-detail">
+            <label>Year Published</label>
+            <p id="sidebarYear"></p>
+        </div>
+        <div class="sidebar-detail">
+            <label>Genres</label>
+            <p id="sidebarGenres"></p>
+        </div>
+        <div class="sidebar-detail">
+            <label>Description</label>
+            <p id="sidebarDescription"></p>
+        </div>
+        <div class="sidebar-detail">
+            <label>Average Rating</label>
+            <p id="sidebarRating">No ratings yet</p>
+        </div>
+        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="downloadBook()">💾 Download Book</button>
+        <div class="sidebar-detail">
+            <label>Rate this book</label>
+            <div class="rating-container" id="ratingStars"></div>
+        </div>
+        <button class="btn btn-success" style="width: 100%; margin-top: 20px;" onclick="addToFavorites()">Add to Favorites</button>
+        <button class="btn btn-danger" style="width: 100%; margin-top: 10px;" id="removeFromFavBtn" onclick="removeFromFavorites()">Remove from Favorites</button>
+    </div>
+
+    <!-- Edit Book Sidebar (Admin) -->
+    <div class="sidebar" id="editBookSidebar">
+        <button class="sidebar-close" onclick="closeEditSidebar()">&times;</button>
+        <h2>Edit Book Details</h2>
+        <div class="form-group">
+            <label>Book Title</label>
+            <input type="text" id="editBookTitle">
+        </div>
+        <div class="form-group">
+            <label>Author</label>
+            <input type="text" id="editBookAuthor">
+        </div>
+        <div class="form-group">
+            <label>Year Published</label>
+            <input type="number" id="editBookYear">
+        </div>
+        <div class="form-group">
+            <label>Genres (Select multiple)</label>
+            <select id="editBookGenres" multiple style="height: 120px;">
+                <option value="Fiction">Fiction</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Romance">Romance</option>
+                <option value="Science Fiction">Science Fiction</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Biography">Biography</option>
+                <option value="History">History</option>
+                <option value="Self-Help">Self-Help</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Horror">Horror</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea id="editBookDescription" rows="4" placeholder="Enter book description"></textarea>
+        </div>
+        <button class="btn btn-success" style="width: 100%; margin-top: 20px;" onclick="saveEditedBook()">Save Changes</button>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="deleteAccountModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px; color: var(--accent-color);">⚠️ Delete Account</h2>
+            <p style="margin-bottom: 20px;">Are you sure you want to delete your account? This action cannot be undone.</p>
+            <div class="action-buttons">
+                <button class="btn btn-danger" onclick="deleteUserAccount()">Proceed</button>
+                <button class="btn btn-secondary" onclick="closeModal('deleteAccountModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">Edit Profile</h2>
+            <div class="form-group">
+                <label>Favorite Genres</label>
+                <select id="editPrefGenres" multiple style="height: 120px;">
+                    <option value="Fiction">Fiction</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Science Fiction">Science Fiction</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Biography">Biography</option>
+                    <option value="History">History</option>
+                    <option value="Self-Help">Self-Help</option>
+                    <option value="Thriller">Thriller</option>
+                    <option value="Horror">Horror</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Favorite Authors</label>
+                <textarea id="editPrefAuthors" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Books Read</label>
+                <textarea id="editPrefBooksRead" rows="3"></textarea>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="saveEditedProfile()">Save Changes</button>
+                <button class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">Share Your Favorites</h2>
+            <p style="margin-bottom: 15px;">Share your favorite books list with friends!</p>
+            <div class="share-buttons">
+                <button class="share-btn whatsapp" onclick="shareViaWhatsApp()">📱 WhatsApp</button>
+                <button class="share-btn facebook" onclick="shareViaFacebook()">👤 Facebook</button>
+                <button class="share-btn telegram" onclick="shareViaTelegram()">✈️ Telegram</button>
+                <button class="share-btn instagram" onclick="shareViaInstagram()">📷 Instagram</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <label style="font-weight: 600; margin-bottom: 10px; display: block;">Share Link:</label>
+                <input type="text" id="shareLink" readonly style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px;">
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" onclick="copyShareLink()">Copy Link</button>
+            </div>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 15px;" onclick="closeModal('shareModal')">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Available genres (global list)
+        let availableGenres = ["Fiction", "Mystery", "Romance", "Science Fiction", "Fantasy", "Biography", "History", "Self-Help", "Thriller", "Horror"];
+
+        // Sample book database with 100 books
+        let books = [
+            {id: 1, title: "To Kill a Mockingbird", author: "Harper Lee", year: 1960, genres: ["Fiction", "Mystery"], ratings: [], avgRating: 0, description: "A gripping tale of racial injustice and childhood innocence in the American South.", readLink: "https://archive.org/details/tokillamockingbi00lee"},
+            {id: 2, title: "1984", author: "George Orwell", year: 1949, genres: ["Fiction", "Science Fiction"], ratings: [], avgRating: 0, description: "A dystopian masterpiece exploring surveillance, totalitarianism, and the manipulation of truth.", readLink: "https://www.gutenberg.org/ebooks/61"},
+            {id: 3, title: "Pride and Prejudice", author: "Jane Austen", year: 1813, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "A witty romance about love, class, and first impressions in Regency England.", readLink: "https://www.gutenberg.org/ebooks/1342"},
+            {id: 4, title: "The Great Gatsby", author: "F. Scott Fitzgerald", year: 1925, genres: ["Fiction"], ratings: [], avgRating: 0, description: "The tragic story of Jay Gatsby and his pursuit of the American Dream in the Jazz Age."},
+            {id: 5, title: "Harry Potter and the Sorcerer's Stone", author: "J.K. Rowling", year: 1997, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "A young wizard discovers his magical heritage and begins his journey at Hogwarts School."},
+            {id: 6, title: "The Hobbit", author: "J.R.R. Tolkien", year: 1937, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "Bilbo Baggins embarks on an unexpected adventure to reclaim a treasure guarded by a dragon."},
+            {id: 7, title: "The Catcher in the Rye", author: "J.D. Salinger", year: 1951, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A teenager's journey through New York City exploring themes of alienation and identity."},
+            {id: 8, title: "The Da Vinci Code", author: "Dan Brown", year: 2003, genres: ["Mystery", "Thriller"], ratings: [], avgRating: 0, description: "A symbologist uncovers a conspiracy involving secret societies and religious history."},
+            {id: 9, title: "The Alchemist", author: "Paulo Coelho", year: 1988, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A spiritual journey of a shepherd boy seeking treasure and discovering life's true meaning."},
+            {id: 10, title: "Gone Girl", author: "Gillian Flynn", year: 2012, genres: ["Mystery", "Thriller"], ratings: [], avgRating: 0, description: "A twisted psychological thriller about a marriage gone terribly wrong."},
+            {id: 11, title: "The Hunger Games", author: "Suzanne Collins", year: 2008, genres: ["Science Fiction", "Fiction"], ratings: [], avgRating: 0, description: "In a dystopian future, teens fight to the death in a televised survival competition."},
+            {id: 12, title: "The Girl on the Train", author: "Paula Hawkins", year: 2015, genres: ["Mystery", "Thriller"], ratings: [], avgRating: 0, description: "A woman becomes entangled in a missing persons case she observes from her train."},
+            {id: 13, title: "The Fault in Our Stars", author: "John Green", year: 2012, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "Two teenagers with cancer fall in love and embark on a life-changing journey."},
+            {id: 14, title: "The Book Thief", author: "Markus Zusak", year: 2005, genres: ["Fiction", "History"], ratings: [], avgRating: 0, description: "Death narrates the story of a girl who steals books in Nazi Germany during World War II."},
+            {id: 15, title: "The Chronicles of Narnia", author: "C.S. Lewis", year: 1950, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "Children discover a magical wardrobe that leads to the enchanted land of Narnia."},
+            {id: 16, title: "The Shining", author: "Stephen King", year: 1977, genres: ["Horror", "Thriller"], ratings: [], avgRating: 0, description: "A family's winter caretaking job at an isolated hotel descends into madness and terror."},
+            {id: 17, title: "The Stand", author: "Stephen King", year: 1978, genres: ["Horror", "Science Fiction"], ratings: [], avgRating: 0, description: "After a plague wipes out most of humanity, survivors face a battle between good and evil."},
+            {id: 18, title: "Brave New World", author: "Aldous Huxley", year: 1932, genres: ["Science Fiction", "Fiction"], ratings: [], avgRating: 0, description: "A satirical vision of a future society controlled by technology and conditioning."},
+            {id: 19, title: "Animal Farm", author: "George Orwell", year: 1945, genres: ["Fiction"], ratings: [], avgRating: 0, description: "An allegorical tale of farm animals who rebel against their human farmer."},
+            {id: 20, title: "Lord of the Flies", author: "William Golding", year: 1954, genres: ["Fiction"], ratings: [], avgRating: 0, description: "Stranded boys on an island descend into savagery, exploring human nature's darkness."},
+            {id: 21, title: "The Lord of the Rings", author: "J.R.R. Tolkien", year: 1954, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "An epic quest to destroy a powerful ring and save Middle-earth from darkness."},
+            {id: 22, title: "Wuthering Heights", author: "Emily Brontë", year: 1847, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "A passionate and destructive love story set on the Yorkshire moors."},
+            {id: 23, title: "Jane Eyre", author: "Charlotte Brontë", year: 1847, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "An orphaned governess finds love and independence despite Victorian society's constraints."},
+            {id: 24, title: "The Picture of Dorian Gray", author: "Oscar Wilde", year: 1890, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A man's portrait ages while he remains young, revealing the corruption of his soul."},
+            {id: 25, title: "Frankenstein", author: "Mary Shelley", year: 1818, genres: ["Horror", "Science Fiction"], ratings: [], avgRating: 0, description: "A scientist creates life, only to be haunted by his monstrous creation."},
+            {id: 26, title: "Dracula", author: "Bram Stoker", year: 1897, genres: ["Horror", "Fiction"], ratings: [], avgRating: 0, description: "The iconic vampire count terrorizes Victorian England in this Gothic horror classic."},
+            {id: 27, title: "The Adventures of Sherlock Holmes", author: "Arthur Conan Doyle", year: 1892, genres: ["Mystery", "Fiction"], ratings: [], avgRating: 0, description: "The brilliant detective solves baffling cases with logic and deduction."},
+            {id: 28, title: "Murder on the Orient Express", author: "Agatha Christie", year: 1934, genres: ["Mystery", "Fiction"], ratings: [], avgRating: 0, description: "Detective Hercule Poirot investigates a murder aboard a luxurious train."},
+            {id: 29, title: "And Then There Were None", author: "Agatha Christie", year: 1939, genres: ["Mystery", "Thriller"], ratings: [], avgRating: 0, description: "Ten strangers on an island are accused of murder and killed off one by one."},
+            {id: 30, title: "The Silence of the Lambs", author: "Thomas Harris", year: 1988, genres: ["Thriller", "Horror"], ratings: [], avgRating: 0, description: "An FBI trainee seeks help from a cannibalistic psychiatrist to catch a serial killer."},
+            {id: 31, title: "The Girl with the Dragon Tattoo", author: "Stieg Larsson", year: 2005, genres: ["Mystery", "Thriller"], ratings: [], avgRating: 0, description: "A journalist and a hacker investigate a decades-old disappearance in Sweden."},
+            {id: 32, title: "The Handmaid's Tale", author: "Margaret Atwood", year: 1985, genres: ["Science Fiction", "Fiction"], ratings: [], avgRating: 0, description: "In a totalitarian society, women are forced into reproductive servitude."},
+            {id: 33, title: "Dune", author: "Frank Herbert", year: 1965, genres: ["Science Fiction", "Fiction"], ratings: [], avgRating: 0, description: "Political intrigue and survival on a desert planet rich with a valuable resource."},
+            {id: 34, title: "Foundation", author: "Isaac Asimov", year: 1951, genres: ["Science Fiction"], ratings: [], avgRating: 0, description: "Mathematicians work to preserve civilization as a galactic empire collapses."},
+            {id: 35, title: "Ender's Game", author: "Orson Scott Card", year: 1985, genres: ["Science Fiction", "Fiction"], ratings: [], avgRating: 0, description: "A gifted child is trained in military strategy to fight an alien invasion."},
+            {id: 36, title: "The Martian", author: "Andy Weir", year: 2011, genres: ["Science Fiction"], ratings: [], avgRating: 0, description: "An astronaut uses science and ingenuity to survive alone on Mars."},
+            {id: 37, title: "Ready Player One", author: "Ernest Cline", year: 2011, genres: ["Science Fiction"], ratings: [], avgRating: 0, description: "A teenager hunts for an Easter egg in a virtual reality universe."},
+            {id: 38, title: "The Road", author: "Cormac McCarthy", year: 2006, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A father and son journey through a post-apocalyptic wasteland."},
+            {id: 39, title: "Life of Pi", author: "Yann Martel", year: 2001, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A boy survives 227 days at sea with a Bengal tiger after a shipwreck."},
+            {id: 40, title: "The Kite Runner", author: "Khaled Hosseini", year: 2003, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A man seeks redemption for childhood betrayals in war-torn Afghanistan."},
+            {id: 41, title: "A Thousand Splendid Suns", author: "Khaled Hosseini", year: 2007, genres: ["Fiction"], ratings: [], avgRating: 0, description: "Two Afghan women form an unlikely friendship amid decades of war."},
+            {id: 42, title: "The Help", author: "Kathryn Stockett", year: 2009, genres: ["Fiction", "History"], ratings: [], avgRating: 0, description: "Black maids in 1960s Mississippi tell their stories to a young white journalist."},
+            {id: 43, title: "The Notebook", author: "Nicholas Sparks", year: 1996, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "An elderly man reads to his Alzheimer's-stricken wife the story of their love."},
+            {id: 44, title: "Me Before You", author: "Jojo Moyes", year: 2012, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "A caregiver falls in love with a paralyzed man contemplating assisted suicide."},
+            {id: 45, title: "Outlander", author: "Diana Gabaldon", year: 1991, genres: ["Romance", "Fantasy"], ratings: [], avgRating: 0, description: "A WWII nurse travels back in time to 18th-century Scotland."},
+            {id: 46, title: "Twilight", author: "Stephenie Meyer", year: 2005, genres: ["Romance", "Fantasy"], ratings: [], avgRating: 0, description: "A teenage girl falls in love with a vampire in this paranormal romance."},
+            {id: 47, title: "The Time Traveler's Wife", author: "Audrey Niffenegger", year: 2003, genres: ["Romance", "Science Fiction"], ratings: [], avgRating: 0, description: "A couple's love transcends time as the husband involuntarily travels through it."},
+            {id: 48, title: "A Game of Thrones", author: "George R.R. Martin", year: 1996, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "Noble families vie for control of the Iron Throne in a medieval fantasy world."},
+            {id: 49, title: "The Name of the Wind", author: "Patrick Rothfuss", year: 2007, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "A legendary magician recounts his journey from orphan to arcane master."},
+            {id: 50, title: "Mistborn", author: "Brandon Sanderson", year: 2006, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "A street thief joins a rebellion using magical powers derived from metals."},
+            {id: 51, title: "The Way of Kings", author: "Brandon Sanderson", year: 2010, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "Warriors with magical armor and weapons fight on a shattered world."},
+            {id: 52, title: "American Gods", author: "Neil Gaiman", year: 2001, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "Old gods battle new gods for relevance in modern America."},
+            {id: 53, title: "Good Omens", author: "Neil Gaiman", year: 1990, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "An angel and demon team up to prevent the apocalypse in this comedic fantasy."},
+            {id: 54, title: "The Ocean at the End of the Lane", author: "Neil Gaiman", year: 2013, genres: ["Fantasy", "Fiction"], ratings: [], avgRating: 0, description: "A man returns home and remembers a supernatural childhood adventure."},
+            {id: 55, title: "Educated", author: "Tara Westover", year: 2018, genres: ["Biography"], ratings: [], avgRating: 0, description: "A woman escapes her survivalist family to earn a PhD through education."},
+            {id: 56, title: "Becoming", author: "Michelle Obama", year: 2018, genres: ["Biography"], ratings: [], avgRating: 0, description: "The former First Lady's memoir of her journey from Chicago to the White House."},
+            {id: 57, title: "The Diary of a Young Girl", author: "Anne Frank", year: 1947, genres: ["Biography", "History"], ratings: [], avgRating: 0, description: "A Jewish girl's diary documenting her family's years in hiding during the Holocaust."},
+            {id: 58, title: "Steve Jobs", author: "Walter Isaacson", year: 2011, genres: ["Biography"], ratings: [], avgRating: 0, description: "The authorized biography of Apple's visionary co-founder and CEO."},
+            {id: 59, title: "The Autobiography of Malcolm X", author: "Malcolm X", year: 1965, genres: ["Biography"], ratings: [], avgRating: 0, description: "The influential civil rights leader's life story and transformation."},
+            {id: 60, title: "Sapiens", author: "Yuval Noah Harari", year: 2011, genres: ["History"], ratings: [], avgRating: 0, description: "A sweeping history of humankind from the Stone Age to the modern era."},
+            {id: 61, title: "Guns, Germs, and Steel", author: "Jared Diamond", year: 1997, genres: ["History"], ratings: [], avgRating: 0, description: "An exploration of why some societies conquered others throughout history."},
+            {id: 62, title: "A Brief History of Time", author: "Stephen Hawking", year: 1988, genres: ["Science"], ratings: [], avgRating: 0, description: "The renowned physicist explains cosmology and the nature of the universe."},
+            {id: 63, title: "The Selfish Gene", author: "Richard Dawkins", year: 1976, genres: ["Science"], ratings: [], avgRating: 0, description: "A gene-centered view of evolution and its implications for behavior."},
+            {id: 64, title: "Thinking, Fast and Slow", author: "Daniel Kahneman", year: 2011, genres: ["Self-Help"], ratings: [], avgRating: 0, description: "How two systems of thinking shape our judgments and decisions."},
+            {id: 65, title: "Atomic Habits", author: "James Clear", year: 2018, genres: ["Self-Help"], ratings: [], avgRating: 0, description: "Small changes that lead to remarkable results through habit formation."},
+            {id: 66, title: "The 7 Habits of Highly Effective People", author: "Stephen Covey", year: 1989, genres: ["Self-Help"], ratings: [], avgRating: 0, description: "Timeless principles for personal and professional effectiveness."},
+            {id: 67, title: "How to Win Friends and Influence People", author: "Dale Carnegie", year: 1936, genres: ["Self-Help"], ratings: [], avgRating: 0, description: "Classic advice on building relationships and influencing others positively."},
+            {id: 68, title: "The Power of Now", author: "Eckhart Tolle", year: 1997, genres: ["Self-Help"], ratings: [], avgRating: 0, description: "A guide to spiritual enlightenment through present-moment awareness."},
+            {id: 69, title: "Man's Search for Meaning", author: "Viktor Frankl", year: 1946, genres: ["Self-Help", "Biography"], ratings: [], avgRating: 0, description: "A Holocaust survivor's account of finding purpose in suffering."},
+            {id: 70, title: "The Subtle Art of Not Giving a F*ck", author: "Mark Manson", year: 2016, genres: ["Self-Help"], ratings: [], avgRating: 0, description: "A counterintuitive approach to living a good life by caring less."},
+            {id: 71, title: "Quiet", author: "Susan Cain", year: 2012, genres: ["Self-Help"], ratings: [], avgRating: 0, description: "Celebrating the power of introverts in a world that values extroversion."},
+            {id: 72, title: "The Four Agreements", author: "Don Miguel Ruiz", year: 1997, genres: ["Self-Help"], ratings: [], avgRating: 0, description: "Ancient Toltec wisdom offering a code of conduct for personal freedom."},
+            {id: 73, title: "Big Little Lies", author: "Liane Moriarty", year: 2014, genres: ["Mystery", "Fiction"], ratings: [], avgRating: 0, description: "Three mothers' seemingly perfect lives unravel into murder and secrets."},
+            {id: 74, title: "The Woman in the Window", author: "A.J. Finn", year: 2018, genres: ["Mystery", "Thriller"], ratings: [], avgRating: 0, description: "An agoraphobic woman witnesses a crime from her window, or does she?"},
+            {id: 75, title: "Sharp Objects", author: "Gillian Flynn", year: 2006, genres: ["Mystery", "Thriller"], ratings: [], avgRating: 0, description: "A reporter returns to her hometown to cover murders of young girls."},
+            {id: 76, title: "The Silent Patient", author: "Alex Michaelides", year: 2019, genres: ["Mystery", "Thriller"], ratings: [], avgRating: 0, description: "A psychotherapist becomes obsessed with a woman who murdered her husband and went silent."},
+            {id: 77, title: "The Lovely Bones", author: "Alice Sebold", year: 2002, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A murdered girl watches from heaven as her family copes with her death."},
+            {id: 78, title: "Room", author: "Emma Donoghue", year: 2010, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A five-year-old boy lives with his mother in a single room, unaware of the outside world."},
+            {id: 79, title: "The Perks of Being a Wallflower", author: "Stephen Chbosky", year: 1999, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A teenager navigates high school, friendship, and mental health through letters."},
+            {id: 80, title: "Eleanor & Park", author: "Rainbow Rowell", year: 2013, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "Two misfit teenagers fall in love on the school bus in 1980s Nebraska."},
+            {id: 81, title: "It", author: "Stephen King", year: 1986, genres: ["Horror", "Thriller"], ratings: [], avgRating: 0, description: "A shape-shifting evil entity terrorizes children in a small Maine town."},
+            {id: 82, title: "Carrie", author: "Stephen King", year: 1974, genres: ["Horror"], ratings: [], avgRating: 0, description: "A bullied teenage girl unleashes her telekinetic powers with devastating results."},
+            {id: 83, title: "Pet Sematary", author: "Stephen King", year: 1983, genres: ["Horror"], ratings: [], avgRating: 0, description: "A burial ground brings the dead back to life, but not as they were."},
+            {id: 84, title: "The Exorcist", author: "William Peter Blatty", year: 1971, genres: ["Horror"], ratings: [], avgRating: 0, description: "A young girl becomes possessed by a demonic entity requiring exorcism."},
+            {id: 85, title: "The Haunting of Hill House", author: "Shirley Jackson", year: 1959, genres: ["Horror"], ratings: [], avgRating: 0, description: "Four people investigate a supposedly haunted mansion with terrifying results."},
+            {id: 86, title: "Rebecca", author: "Daphne du Maurier", year: 1938, genres: ["Mystery", "Romance"], ratings: [], avgRating: 0, description: "A young bride is haunted by her husband's deceased first wife at a Gothic mansion."},
+            {id: 87, title: "The Shadow of the Wind", author: "Carlos Ruiz Zafón", year: 2001, genres: ["Mystery", "Fiction"], ratings: [], avgRating: 0, description: "A boy discovers a mysterious book that leads to dark secrets in post-war Barcelona."},
+            {id: 88, title: "One Hundred Years of Solitude", author: "Gabriel García Márquez", year: 1967, genres: ["Fiction"], ratings: [], avgRating: 0, description: "The magical realist saga of the Buendía family across seven generations."},
+            {id: 89, title: "Love in the Time of Cholera", author: "Gabriel García Márquez", year: 1985, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "A man waits over fifty years to rekindle his love with his first passion."},
+            {id: 90, title: "The Count of Monte Cristo", author: "Alexandre Dumas", year: 1844, genres: ["Fiction", "History"], ratings: [], avgRating: 0, description: "A wrongly imprisoned man escapes and seeks elaborate revenge on those who betrayed him."},
+            {id: 91, title: "Les Misérables", author: "Victor Hugo", year: 1862, genres: ["Fiction", "History"], ratings: [], avgRating: 0, description: "An ex-convict seeks redemption while pursued by a relentless police inspector in 19th-century France."},
+            {id: 92, title: "War and Peace", author: "Leo Tolstoy", year: 1869, genres: ["Fiction", "History"], ratings: [], avgRating: 0, description: "Russian aristocratic families navigate love and war during Napoleon's invasion."},
+            {id: 93, title: "Anna Karenina", author: "Leo Tolstoy", year: 1877, genres: ["Romance", "Fiction"], ratings: [], avgRating: 0, description: "A married woman's affair leads to tragedy in Russian high society."},
+            {id: 94, title: "Crime and Punishment", author: "Fyodor Dostoevsky", year: 1866, genres: ["Fiction"], ratings: [], avgRating: 0, description: "A former student commits murder and grapples with guilt and morality."},
+            {id: 95, title: "The Brothers Karamazov", author: "Fyodor Dostoevsky", year: 1880, genres: ["Fiction"], ratings: [], avgRating: 0, description: "Three brothers with different beliefs become entangled in their father's murder."},
+            {id: 96, title: "Moby-Dick", author: "Herman Melville", year: 1851, genres: ["Fiction"], ratings: [], avgRating: 0, description: "Captain Ahab's obsessive quest to kill the white whale that maimed him."},
+            {id: 97, title: "The Odyssey", author: "Homer", year: -800, genres: ["Fiction", "History"], ratings: [], avgRating: 0, description: "The epic journey of Odysseus as he returns home after the Trojan War."},
+            {id: 98, title: "The Iliad", author: "Homer", year: -800, genres: ["Fiction", "History"], ratings: [], avgRating: 0, description: "The final year of the Trojan War, focusing on Achilles' rage and heroism."},
+            {id: 99, title: "Don Quixote", author: "Miguel de Cervantes", year: 1605, genres: ["Fiction"], ratings: [], avgRating: 0, description: "An aging gentleman believes himself a knight and embarks on delusional adventures."},
+            {id: 100, title: "The Divine Comedy", author: "Dante Alighieri", year: 1320, genres: ["Fiction"], ratings: [], avgRating: 0, description: "Dante's allegorical journey through Hell, Purgatory, and Paradise."}
+        ];
+
+        // User database
+        let users = [
+            {username: "user1", password: "pass123", preferences: {genres: [], authors: [], booksRead: []}, favorites: [], loginCount: 0}
+        ];
+
+        // Admin credentials
+        const adminCreds = {username: "admin", password: "admin123"};
+
+        // Current user and session state
+        let currentUser = null;
+        let currentBook = null;
+        let selectedBooksForDeletion = [];
+        let currentEditBook = null;
+        let filteredBooks = [...books];
+        let userRatings = {}; // Store user ratings by username: {username: {bookId: rating}}
+
+        // Initialize app
+        function init() {
+            populateFilters();
+            updateAllGenreSelects();
+        }
+
+        // Login functions
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            if (tab === 'user') {
+                event.target.classList.add('active');
+                document.getElementById('userLoginForm').classList.remove('hidden');
+                document.getElementById('adminLoginForm').classList.add('hidden');
+            } else {
+                event.target.classList.add('active');
+                document.getElementById('adminLoginForm').classList.remove('hidden');
+                document.getElementById('userLoginForm').classList.add('hidden');
+            }
+        }
+
+        function userLogin() {
+            const username = document.getElementById('userUsername').value.trim();
+            const password = document.getElementById('userPassword').value.trim();
+
+            if (!username || !password) {
+                alert('Please enter username and password');
+                return;
+            }
+
+            let user = users.find(u => u.username === username && u.password === password);
+            
+            if (!user) {
+                alert('Invalid username or password. Please try again or create a new account.');
+                return;
+            }
+
+            user.loginCount++;
+            currentUser = user;
+
+            if (user.loginCount === 1) {
+                showScreen('preferencesScreen');
+            } else {
+                showScreen('userDashboard');
+                document.getElementById('navUsername').textContent = currentUser.username;
+            }
+        }
+
+        function showSignupForm() {
+            showScreen('signupScreen');
+        }
+
+        function backToLogin() {
+            showScreen('loginScreen');
+            document.getElementById('signupUsername').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirmPassword').value = '';
+        }
+
+        function createAccount() {
+            const username = document.getElementById('signupUsername').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            const confirmPassword = document.getElementById('signupConfirmPassword').value.trim();
+
+            if (!username || !password || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+
+            // Check if username already exists
+            if (users.find(u => u.username === username)) {
+                alert('Username already exists. Please choose a different username.');
+                return;
+            }
+
+            // Create new user account
+            const newUser = {
+                username: username,
+                password: password,
+                preferences: {genres: [], authors: [], booksRead: []},
+                favorites: [],
+                loginCount: 0
+            };
+            users.push(newUser);
+
+            alert('Account created successfully! Please login with your new credentials.');
+            backToLogin();
+            
+            // Auto-fill login form
+            document.getElementById('userUsername').value = username;
+        }
+
+        function adminLogin() {
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+
+            if (username === adminCreds.username && password === adminCreds.password) {
+                showScreen('adminDashboard');
+            } else {
+                alert('Invalid admin credentials');
+            }
+        }
+
+        function savePreferences() {
+            const genres = Array.from(document.getElementById('prefGenres').selectedOptions).map(o => o.value);
+            const authors = document.getElementById('prefAuthors').value.split(',').map(a => a.trim()).filter(a => a);
+            const booksRead = document.getElementById('prefBooksRead').value.split(',').map(b => b.trim()).filter(b => b);
+
+            currentUser.preferences = {genres, authors, booksRead};
+            showScreen('userDashboard');
+            document.getElementById('navUsername').textContent = currentUser.username;
+        }
+
+        function skipPreferences() {
+            showScreen('userDashboard');
+            document.getElementById('navUsername').textContent = currentUser.username;
+        }
+
+        function userLogout() {
+            currentUser = null;
+            showScreen('loginScreen');
+            document.getElementById('userUsername').value = '';
+            document.getElementById('userPassword').value = '';
+        }
+
+        function adminLogout() {
+            showScreen('loginScreen');
+            document.getElementById('adminUsername').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        // Screen navigation
+        function showScreen(screenId) {
+            document.querySelectorAll('.container > div').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function backToUserDashboard() {
+            closeSidebar();
+            showScreen('userDashboard');
+        }
+
+        function backToAdminDashboard() {
+            closeEditSidebar();
+            showScreen('adminDashboard');
+        }
+
+        // User dashboard actions
+        function showBrowseBooks() {
+            showScreen('browseBooksScreen');
+            displayBooks(books);
+            populateFilters();
+        }
+
+        function showRecommendations() {
+            showScreen('recommendationsScreen');
+            generateRecommendations();
+        }
+
+        function showFavorites() {
+            showScreen('favoritesScreen');
+            displayFavorites();
+        }
+
+        function showUserProfile() {
+            showScreen('userProfileScreen');
+            displayUserProfile();
+        }
+
+        // Browse books functionality
+        function displayBooks(booksToDisplay) {
+            const booksList = document.getElementById('booksList');
+            booksList.innerHTML = '';
+
+            booksToDisplay.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.innerHTML = `
+                    <div class="book-cover">📖</div>
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>${book.author} • ${book.year}</p>
+                    </div>
+                `;
+                bookItem.onclick = () => openBookSidebar(book);
+                booksList.appendChild(bookItem);
+            });
+
+            if (booksToDisplay.length === 0) {
+                booksList.innerHTML = '<p style="text-align: center; color: #7f8c8d; margin-top: 40px;">No books found</p>';
+            }
+        }
+
+        function populateFilters() {
+            const genres = [...new Set(books.flatMap(b => b.genres))].sort();
+            const authors = [...new Set(books.map(b => b.author))].sort();
+
+            const genreFilter = document.getElementById('genreFilter');
+            const authorFilter = document.getElementById('authorFilter');
+
+            genreFilter.innerHTML = '<option value="">All Genres</option>';
+            authorFilter.innerHTML = '<option value="">All Authors</option>';
+
+            genres.forEach(genre => {
+                genreFilter.innerHTML += `<option value="${genre}">${genre}</option>`;
+            });
+
+            authors.forEach(author => {
+                authorFilter.innerHTML += `<option value="${author}">${author}</option>`;
+            });
+        }
+
+        function updateAllGenreSelects() {
+            const sortedGenres = [...availableGenres].sort();
+            
+            // Update add book genres
+            const newBookGenres = document.getElementById('newBookGenres');
+            if (newBookGenres) {
+                const selectedNew = Array.from(newBookGenres.selectedOptions).map(o => o.value);
+                newBookGenres.innerHTML = '';
+                sortedGenres.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre;
+                    option.textContent = genre;
+                    if (selectedNew.includes(genre)) option.selected = true;
+                    newBookGenres.appendChild(option);
+                });
+            }
+
+            // Update edit book genres
+            const editBookGenres = document.getElementById('editBookGenres');
+            if (editBookGenres) {
+                const selectedEdit = Array.from(editBookGenres.selectedOptions).map(o => o.value);
+                editBookGenres.innerHTML = '';
+                sortedGenres.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre;
+                    option.textContent = genre;
+                    if (selectedEdit.includes(genre)) option.selected = true;
+                    editBookGenres.appendChild(option);
+                });
+            }
+
+            // Update preferences genres
+            const prefGenres = document.getElementById('prefGenres');
+            if (prefGenres) {
+                const selectedPref = Array.from(prefGenres.selectedOptions).map(o => o.value);
+                prefGenres.innerHTML = '';
+                sortedGenres.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre;
+                    option.textContent = genre;
+                    if (selectedPref.includes(genre)) option.selected = true;
+                    prefGenres.appendChild(option);
+                });
+            }
+
+            // Update edit profile genres
+            const editPrefGenres = document.getElementById('editPrefGenres');
+            if (editPrefGenres) {
+                const selectedEditPref = Array.from(editPrefGenres.selectedOptions).map(o => o.value);
+                editPrefGenres.innerHTML = '';
+                sortedGenres.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre;
+                    option.textContent = genre;
+                    if (selectedEditPref.includes(genre)) option.selected = true;
+                    editPrefGenres.appendChild(option);
+                });
+            }
+
+            // Update browse books filter
+            const genreFilter = document.getElementById('genreFilter');
+            if (genreFilter) {
+                const selectedFilter = genreFilter.value;
+                genreFilter.innerHTML = '<option value="">All Genres</option>';
+                sortedGenres.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre;
+                    option.textContent = genre;
+                    if (selectedFilter === genre) option.selected = true;
+                    genreFilter.appendChild(option);
+                });
+            }
+        }
+
+        function addNewGenre() {
+            const newGenre = document.getElementById('newGenreInput').value.trim();
+            
+            if (!newGenre) {
+                alert('Please enter a genre name');
+                return;
+            }
+
+            // Check if genre already exists (case-insensitive)
+            const genreExists = availableGenres.some(g => g.toLowerCase() === newGenre.toLowerCase());
+            
+            if (genreExists) {
+                alert('This genre already exists!');
+                return;
+            }
+
+            // Add the new genre
+            availableGenres.push(newGenre);
+            
+            // Update all genre select elements
+            updateAllGenreSelects();
+            
+            // Clear the input
+            document.getElementById('newGenreInput').value = '';
+            
+            // Select the newly added genre in the new book genres select
+            const newBookGenres = document.getElementById('newBookGenres');
+            Array.from(newBookGenres.options).forEach(option => {
+                if (option.value === newGenre) {
+                    option.selected = true;
+                }
+            });
+            
+            alert(`Genre "${newGenre}" added successfully!`);
+        }
+
+        function filterBooks() {
+            const searchTerm = document.getElementById('bookSearch').value.toLowerCase();
+            const genreFilter = document.getElementById('genreFilter').value;
+            const authorFilter = document.getElementById('authorFilter').value;
+
+            filteredBooks = books.filter(book => {
+                const matchesSearch = book.title.toLowerCase().includes(searchTerm) || 
+                                    book.author.toLowerCase().includes(searchTerm);
+                const matchesGenre = !genreFilter || book.genres.includes(genreFilter);
+                const matchesAuthor = !authorFilter || book.author === authorFilter;
+
+                return matchesSearch && matchesGenre && matchesAuthor;
+            });
+
+            sortBooks();
+        }
+
+        function sortBooks() {
+            const sortBy = document.getElementById('sortBy').value;
+
+            if (sortBy === 'alphabetical') {
+                filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortBy === 'alphabetical-reverse') {
+                filteredBooks.sort((a, b) => b.title.localeCompare(a.title));
+            } else if (sortBy === 'year') {
+                filteredBooks.sort((a, b) => b.year - a.year);
+            } else if (sortBy === 'year-oldest') {
+                filteredBooks.sort((a, b) => a.year - b.year);
+            }
+
+            displayBooks(filteredBooks);
+        }
+
+        function openBookSidebar(book) {
+            currentBook = book;
+            document.getElementById('sidebarBookTitle').textContent = book.title;
+            document.getElementById('sidebarAuthor').textContent = book.author;
+            document.getElementById('sidebarYear').textContent = book.year;
+            document.getElementById('sidebarGenres').textContent = book.genres.join(', ');
+            document.getElementById('sidebarDescription').textContent = book.description || 'No description available';
+            
+            if (book.avgRating > 0) {
+                document.getElementById('sidebarRating').textContent = `${book.avgRating.toFixed(1)} / 5.0`;
+            } else {
+                document.getElementById('sidebarRating').textContent = 'No ratings yet';
+            }
+
+            renderRatingStars();
+
+            const isFavorite = currentUser.favorites.includes(book.id);
+            document.getElementById('removeFromFavBtn').style.display = isFavorite ? 'block' : 'none';
+
+            document.getElementById('bookSidebar').classList.add('active');
+        }
+
+        function closeSidebar() {
+            document.getElementById('bookSidebar').classList.remove('active');
+        }
+
+        function renderRatingStars() {
+            const container = document.getElementById('ratingStars');
+            container.innerHTML = '';
+
+            // Check if user has already rated this book
+            const userRating = userRatings[currentUser.username]?.[currentBook.id];
+
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('span');
+                star.className = 'star';
+                star.textContent = '★';
+                if (userRating && i <= userRating) {
+                    star.classList.add('active');
+                }
+                star.onclick = () => rateBook(i);
+                container.appendChild(star);
+            }
+
+            // Add "Erase Rating" button if user has rated
+            if (userRating) {
+                const eraseBtn = document.createElement('button');
+                eraseBtn.className = 'btn btn-secondary';
+                eraseBtn.textContent = 'Erase My Rating';
+                eraseBtn.style.width = '100%';
+                eraseBtn.style.marginTop = '10px';
+                eraseBtn.onclick = eraseRating;
+                container.parentElement.appendChild(eraseBtn);
+            }
+        }
+
+        function rateBook(rating) {
+            if (!currentBook || !currentUser) return;
+
+            // Check if user has already rated this book
+            if (!userRatings[currentUser.username]) {
+                userRatings[currentUser.username] = {};
+            }
+
+            const previousRating = userRatings[currentUser.username][currentBook.id];
+
+            if (previousRating) {
+                // Update existing rating
+                const index = currentBook.ratings.indexOf(previousRating);
+                if (index > -1) {
+                    currentBook.ratings[index] = rating;
+                }
+                alert('Rating updated successfully!');
+            } else {
+                // Add new rating
+                currentBook.ratings.push(rating);
+                alert('Rating submitted successfully!');
+            }
+
+            // Store user's rating
+            userRatings[currentUser.username][currentBook.id] = rating;
+
+            // Recalculate average
+            currentBook.avgRating = currentBook.ratings.reduce((a, b) => a + b, 0) / currentBook.ratings.length;
+            document.getElementById('sidebarRating').textContent = `${currentBook.avgRating.toFixed(1)} / 5.0`;
+
+            // Update star display
+            const stars = document.querySelectorAll('#ratingStars .star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function eraseRating() {
+            if (!currentBook || !currentUser) return;
+
+            const userRating = userRatings[currentUser.username]?.[currentBook.id];
+            
+            if (!userRating) return;
+
+            // Remove rating from book
+            const index = currentBook.ratings.indexOf(userRating);
+            if (index > -1) {
+                currentBook.ratings.splice(index, 1);
+            }
+
+            // Remove from user ratings
+            delete userRatings[currentUser.username][currentBook.id];
+
+            // Recalculate average
+            if (currentBook.ratings.length > 0) {
+                currentBook.avgRating = currentBook.ratings.reduce((a, b) => a + b, 0) / currentBook.ratings.length;
+                document.getElementById('sidebarRating').textContent = `${currentBook.avgRating.toFixed(1)} / 5.0`;
+            } else {
+                currentBook.avgRating = 0;
+                document.getElementById('sidebarRating').textContent = 'No ratings yet';
+            }
+
+            // Clear stars and remove erase button
+            const stars = document.querySelectorAll('#ratingStars .star');
+            stars.forEach(star => star.classList.remove('active'));
+            
+            // Re-render to remove erase button
+            openBookSidebar(currentBook);
+
+            alert('Your rating has been erased!');
+        }
+
+        function addToFavorites() {
+            if (!currentBook || !currentUser) return;
+
+            if (!currentUser.favorites.includes(currentBook.id)) {
+                currentUser.favorites.push(currentBook.id);
+                alert('Book added to favorites!');
+                document.getElementById('removeFromFavBtn').style.display = 'block';
+            } else {
+                alert('Book is already in your favorites!');
+            }
+        }
+
+        function removeFromFavorites() {
+            if (!currentBook || !currentUser) return;
+
+            const index = currentUser.favorites.indexOf(currentBook.id);
+            if (index > -1) {
+                currentUser.favorites.splice(index, 1);
+                alert('Book removed from favorites!');
+                document.getElementById('removeFromFavBtn').style.display = 'none';
+                
+                if (document.getElementById('favoritesScreen').classList.contains('hidden') === false) {
+                    displayFavorites();
+                }
+            }
+        }
+
+        // Recommendations functionality
+        function generateRecommendations() {
+            switchRecommendationTab('genre');
+        }
+
+        function switchRecommendationTab(tab) {
+            document.querySelectorAll('.recommendation-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'genre') {
+                document.getElementById('genreRecommendations').classList.remove('hidden');
+                document.getElementById('authorRecommendations').classList.add('hidden');
+                displayGenreRecommendations();
+            } else {
+                document.getElementById('authorRecommendations').classList.remove('hidden');
+                document.getElementById('genreRecommendations').classList.add('hidden');
+                displayAuthorRecommendations();
+            }
+        }
+
+        function displayGenreRecommendations() {
+            const userGenres = currentUser.preferences.genres;
+            const booksRead = currentUser.preferences.booksRead.map(b => b.toLowerCase());
+
+            let recommendations = books.filter(book => {
+                const hasMatchingGenre = book.genres.some(g => userGenres.includes(g));
+                const notRead = !booksRead.some(rb => book.title.toLowerCase().includes(rb));
+                return hasMatchingGenre && notRead;
+            });
+
+            recommendations = recommendations.slice(0, 10);
+
+            const list = document.getElementById('genreRecList');
+            list.innerHTML = '';
+
+            recommendations.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.innerHTML = `
+                    <div class="book-cover">📖</div>
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>${book.author} • ${book.year}</p>
+                    </div>
+                `;
+                bookItem.onclick = () => openBookSidebar(book);
+                list.appendChild(bookItem);
+            });
+
+            if (recommendations.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #7f8c8d; margin-top: 40px;">No recommendations found. Update your preferences to get better suggestions!</p>';
+            }
+        }
+
+        function displayAuthorRecommendations() {
+            const userAuthors = currentUser.preferences.authors.map(a => a.toLowerCase());
+            const booksRead = currentUser.preferences.booksRead.map(b => b.toLowerCase());
+
+            let recommendations = books.filter(book => {
+                const hasMatchingAuthor = userAuthors.some(ua => book.author.toLowerCase().includes(ua));
+                const notRead = !booksRead.some(rb => book.title.toLowerCase().includes(rb));
+                return hasMatchingAuthor && notRead;
+            });
+
+            recommendations = recommendations.slice(0, 10);
+
+            const list = document.getElementById('authorRecList');
+            list.innerHTML = '';
+
+            recommendations.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.innerHTML = `
+                    <div class="book-cover">📖</div>
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>${book.author} • ${book.year}</p>
+                    </div>
+                `;
+                bookItem.onclick = () => openBookSidebar(book);
+                list.appendChild(bookItem);
+            });
+
+            if (recommendations.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #7f8c8d; margin-top: 40px;">No recommendations found. Update your preferences to get better suggestions!</p>';
+            }
+        }
+
+        // Favorites functionality
+        function displayFavorites() {
+            const favoritesList = document.getElementById('favoritesList');
+            const noFavoritesMsg = document.getElementById('noFavoritesMsg');
+
+            favoritesList.innerHTML = '';
+
+            if (currentUser.favorites.length === 0) {
+                favoritesList.classList.add('hidden');
+                noFavoritesMsg.classList.remove('hidden');
+                return;
+            }
+
+            favoritesList.classList.remove('hidden');
+            noFavoritesMsg.classList.add('hidden');
+
+            const favoriteBooks = books.filter(book => currentUser.favorites.includes(book.id));
+
+            favoriteBooks.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.innerHTML = `
+                    <div class="book-cover">📖</div>
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>${book.author} • ${book.year}</p>
+                    </div>
+                `;
+                bookItem.onclick = () => openBookSidebar(book);
+                favoritesList.appendChild(bookItem);
+            });
+        }
+
+        function showShareOptions() {
+            const shareLink = `${window.location.origin}${window.location.pathname}?favorites=${currentUser.username}`;
+            document.getElementById('shareLink').value = shareLink;
+            openModal('shareModal');
+        }
+
+        function shareViaWhatsApp() {
+            const favoriteBooks = books.filter(book => currentUser.favorites.includes(book.id));
+            const bookList = favoriteBooks.map(b => `${b.title} by ${b.author}`).join('\n');
+            const message = `Check out my favorite books:\n\n${bookList}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareViaFacebook() {
+            const shareLink = document.getElementById('shareLink').value;
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareLink)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareViaTelegram() {
+            const favoriteBooks = books.filter(book => currentUser.favorites.includes(book.id));
+            const bookList = favoriteBooks.map(b => `${b.title} by ${b.author}`).join('\n');
+            const message = `Check out my favorite books:\n\n${bookList}`;
+            const url = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        function shareViaInstagram() {
+            const favoriteBooks = books.filter(book => currentUser.favorites.includes(book.id));
+            const bookList = favoriteBooks.map(b => `${b.title} by ${b.author}`).join('\n');
+            const message = `Check out my favorite books:\n\n${bookList}`;
+            
+            // Instagram doesn't support direct sharing via URL, so we copy to clipboard
+            const textArea = document.createElement('textarea');
+            textArea.value = message;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            alert('Your favorite books list has been copied to clipboard! You can now paste it in Instagram.');
+        }
+
+        function copyShareLink() {
+            const shareLink = document.getElementById('shareLink');
+            shareLink.select();
+            document.execCommand('copy');
+            alert('Link copied to clipboard!');
+        }
+
+        // Profile functionality
+        function displayUserProfile() {
+            document.getElementById('profileUsername').textContent = currentUser.username;
+            document.getElementById('profileGenres').textContent = currentUser.preferences.genres.join(', ') || 'None specified';
+            document.getElementById('profileAuthors').textContent = currentUser.preferences.authors.join(', ') || 'None specified';
+            document.getElementById('profileBooksRead').textContent = currentUser.preferences.booksRead.join(', ') || 'None specified';
+        }
+
+        function editProfile() {
+            document.getElementById('editPrefGenres').value = currentUser.preferences.genres;
+            document.getElementById('editPrefAuthors').value = currentUser.preferences.authors.join(', ');
+            document.getElementById('editPrefBooksRead').value = currentUser.preferences.booksRead.join(', ');
+
+            Array.from(document.getElementById('editPrefGenres').options).forEach(option => {
+                if (currentUser.preferences.genres.includes(option.value)) {
+                    option.selected = true;
+                }
+            });
+
+            openModal('editProfileModal');
+        }
+
+        function saveEditedProfile() {
+            const genres = Array.from(document.getElementById('editPrefGenres').selectedOptions).map(o => o.value);
+            const authors = document.getElementById('editPrefAuthors').value.split(',').map(a => a.trim()).filter(a => a);
+            const booksRead = document.getElementById('editPrefBooksRead').value.split(',').map(b => b.trim()).filter(b => b);
+
+            currentUser.preferences = {genres, authors, booksRead};
+            displayUserProfile();
+            closeModal('editProfileModal');
+            alert('Profile updated successfully!');
+        }
+
+        function confirmDeleteAccount() {
+            openModal('deleteAccountModal');
+        }
+
+        function deleteUserAccount() {
+            const index = users.findIndex(u => u.username === currentUser.username);
+            if (index > -1) {
+                users.splice(index, 1);
+            }
+            closeModal('deleteAccountModal');
+            userLogout();
+        }
+
+        // Admin functionality
+        function showAddBooks() {
+            showScreen('adminAddBooksScreen');
+        }
+
+        function showDeleteBooks() {
+            showScreen('adminDeleteBooksScreen');
+            displayDeleteBooks(books);
+            selectedBooksForDeletion = [];
+        }
+
+        function showEditBooks() {
+            showScreen('adminEditBooksScreen');
+            displayEditBooks(books);
+        }
+
+        function showUserActivity() {
+            showScreen('adminUserActivityScreen');
+            displayUserActivity();
+        }
+
+        async function downloadBook() {
+            if (!currentBook) return;
+            
+            // If book already has a downloadLink, use it
+            if (currentBook.downloadLink) {
+                const a = document.createElement('a');
+                a.href = currentBook.downloadLink;
+                a.download = `${currentBook.title}.epub`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                return;
+            }
+            
+            // Otherwise, search Gutendex API
+            try {
+                alert('Searching for book...');
+                const searchQuery = encodeURIComponent(currentBook.title);
+                const response = await fetch(`https://gutendex.com/books?search=${searchQuery}`);
+                const data = await response.json();
+                
+                if (data.results && data.results.length > 0) {
+                    // Get the first result
+                    const book = data.results[0];
+                    
+                    // Try to find downloadable formats: EPUB first, then PDF, then plain text
+                    let downloadLink = book.formats['application/epub+zip'] || 
+                                       book.formats['application/pdf'] || 
+                                       book.formats['text/plain'];
+                    
+                    if (downloadLink) {
+                        // Store the link for future use
+                        currentBook.downloadLink = downloadLink;
+                        
+                        // Determine file extension
+                        let extension = '.epub';
+                        if (downloadLink.includes('pdf')) extension = '.pdf';
+                        else if (downloadLink.includes('txt') || downloadLink.includes('plain')) extension = '.txt';
+                        
+                        // Trigger download
+                        const a = document.createElement('a');
+                        a.href = downloadLink;
+                        a.download = `${currentBook.title}${extension}`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        
+                        alert('Download started! Check your downloads folder.');
+                    } else {
+                        alert('No downloadable format available for this book on Gutendex.');
+                    }
+                } else {
+                    alert('This book is not available on Project Gutenberg. Only public domain books are available for download.');
+                }
+            } catch (error) {
+                console.error('Error fetching from Gutendex:', error);
+                alert('Unable to fetch book from Gutendex API. Please try again later.');
+            }
+        }
+
+        function addNewBook() {
+            const title = document.getElementById('newBookTitle').value.trim();
+            const author = document.getElementById('newBookAuthor').value.trim();
+            const year = document.getElementById('newBookYear').value.trim();
+            const genres = Array.from(document.getElementById('newBookGenres').selectedOptions).map(o => o.value);
+
+            if (!title || !author || !year) {
+                alert('Please fill in all required fields (Title, Author, Year)');
+                return;
+            }
+
+            // Check if book already exists
+            const bookExists = books.some(book => 
+                book.title.toLowerCase() === title.toLowerCase() && 
+                book.author.toLowerCase() === author.toLowerCase()
+            );
+
+            if (bookExists) {
+                alert('This book already exists in the list!');
+                return;
+            }
+
+            const newBook = {
+                id: books.length + 1,
+                title: title,
+                author: author,
+                year: parseInt(year),
+                genres: genres.length > 0 ? genres : ['Fiction'],
+                ratings: [],
+                avgRating: 0,
+                description: 'No description available',
+                readLink: ''
+            };
+
+            books.push(newBook);
+
+            document.getElementById('newBookTitle').value = '';
+            document.getElementById('newBookAuthor').value = '';
+            document.getElementById('newBookYear').value = '';
+            document.getElementById('newBookGenres').selectedIndex = -1;
+
+            alert('Book added successfully!');
+        }
+
+        function displayDeleteBooks(booksToDisplay) {
+            const booksList = document.getElementById('deleteBooksListAdmin');
+            booksList.innerHTML = '';
+
+            booksToDisplay.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                if (selectedBooksForDeletion.includes(book.id)) {
+                    bookItem.classList.add('selected');
+                }
+                bookItem.innerHTML = `
+                    <div class="book-cover">📖</div>
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>${book.author} • ${book.year}</p>
+                    </div>
+                `;
+                bookItem.onclick = () => toggleBookSelection(book.id, bookItem);
+                booksList.appendChild(bookItem);
+            });
+        }
+
+        function toggleBookSelection(bookId, element) {
+            const index = selectedBooksForDeletion.indexOf(bookId);
+            if (index > -1) {
+                selectedBooksForDeletion.splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                selectedBooksForDeletion.push(bookId);
+                element.classList.add('selected');
+            }
+        }
+
+        function deleteSelectedBooks() {
+            if (selectedBooksForDeletion.length === 0) {
+                alert('Please select books to delete');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete ${selectedBooksForDeletion.length} book(s)?`)) {
+                books = books.filter(book => !selectedBooksForDeletion.includes(book.id));
+                selectedBooksForDeletion = [];
+                displayDeleteBooks(books);
+                alert('Books deleted successfully!');
+            }
+        }
+
+        function filterDeleteBooks() {
+            const searchTerm = document.getElementById('deleteBookSearch').value.toLowerCase();
+            const filtered = books.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) || 
+                book.author.toLowerCase().includes(searchTerm)
+            );
+            displayDeleteBooks(filtered);
+        }
+
+        function displayEditBooks(booksToDisplay) {
+            const booksList = document.getElementById('editBooksList');
+            booksList.innerHTML = '';
+
+            booksToDisplay.forEach(book => {
+                const bookItem = document.createElement('div');
+                bookItem.className = 'book-item';
+                bookItem.innerHTML = `
+                    <div class="book-cover">📖</div>
+                    <div class="book-info">
+                        <h4>${book.title}</h4>
+                        <p>${book.author} • ${book.year}</p>
+                    </div>
+                `;
+                bookItem.onclick = () => openEditBookSidebar(book);
+                booksList.appendChild(bookItem);
+            });
+        }
+
+        function filterEditBooks() {
+            const searchTerm = document.getElementById('editBookSearch').value.toLowerCase();
+            const filtered = books.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) || 
+                book.author.toLowerCase().includes(searchTerm)
+            );
+            displayEditBooks(filtered);
+        }
+
+        function openEditBookSidebar(book) {
+            currentEditBook = book;
+            document.getElementById('editBookTitle').value = book.title;
+            document.getElementById('editBookAuthor').value = book.author;
+            document.getElementById('editBookYear').value = book.year;
+            document.getElementById('editBookDescription').value = book.description || '';
+
+            Array.from(document.getElementById('editBookGenres').options).forEach(option => {
+                option.selected = book.genres.includes(option.value);
+            });
+
+            document.getElementById('editBookSidebar').classList.add('active');
+        }
+
+        function closeEditSidebar() {
+            document.getElementById('editBookSidebar').classList.remove('active');
+        }
+
+        function saveEditedBook() {
+            if (!currentEditBook) return;
+
+            currentEditBook.title = document.getElementById('editBookTitle').value.trim();
+            currentEditBook.author = document.getElementById('editBookAuthor').value.trim();
+            currentEditBook.year = parseInt(document.getElementById('editBookYear').value);
+            currentEditBook.genres = Array.from(document.getElementById('editBookGenres').selectedOptions).map(o => o.value);
+            currentEditBook.description = document.getElementById('editBookDescription').value.trim() || 'No description available';
+
+            closeEditSidebar();
+            displayEditBooks(books);
+            alert('Book updated successfully!');
+        }
+
+        function displayUserActivity() {
+            document.getElementById('totalUsersCount').textContent = users.length;
+
+            const userList = document.getElementById('userActivityList');
+            userList.innerHTML = '';
+
+            users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <div>
+                        <h4>${user.username}</h4>
+                        <p style="font-size: 0.9em; color: #7f8c8d;">Logins: ${user.loginCount} • Favorites: ${user.favorites.length}</p>
+                    </div>
+                    <span style="color: var(--success-color); font-weight: 600;">Active</span>
+                `;
+                userList.appendChild(userItem);
+            });
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
